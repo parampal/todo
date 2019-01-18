@@ -1,2 +1,3 @@
 # todo
-Todo list for Android using Kotlin
+Todo list for Android using Kotlin.
+* API: https://jsonplaceholder.typicode.com
