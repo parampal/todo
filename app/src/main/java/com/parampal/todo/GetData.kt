@@ -5,5 +5,11 @@ import retrofit2.http.GET
 
 interface GetData {
     @GET("/todos")
-    fun getData(): Observable<List<Todo>>
+    fun getTodos(): Observable<List<Todo>>
+
+    @GET("/users/{user}/todos")
+    fun getTodosForUser(): Observable<List<Todo>>
+
+    @GET("/users")
+    fun getUsers(): Observable<List<User>>
 }
