@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.parampal.todo.ui.main.TodoFragment
 import android.widget.Spinner
@@ -43,11 +45,15 @@ class MainActivity : AppCompatActivity() {
 
         val item = menu.findItem(R.id.spinner)
         spinner = item.actionView as Spinner // get the spinner
-//        updateSpinnerValues()
+        spinner!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
 
-// setSpinnerValues(listOf("All Users"))
-//        spinner.adapter = adapter
-//        spinner.onItemSelectedListener = onItemSelectedListener
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                mainViewModel!!.loadTodosForPosition(position.dec())
+            }
+        }
 
         return super.onCreateOptionsMenu(menu)
     }

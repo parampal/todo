@@ -24,6 +24,20 @@ class MainViewModel : ViewModel() {
         myCompositeDisposable = CompositeDisposable()
     }
 
+    public fun getUserByPosition(pos: Int): User {
+        return this.users.value!!.get(pos)
+    }
+
+    public fun loadTodosForPosition(pos: Int) {
+        if (pos < 0) {
+            return loadTodos()
+        }
+        Log.d("loadtodos", pos.toString())
+        Log.d("loadtodos", getUserByPosition(pos).toString())
+
+        loadTodosForUser(getUserByPosition(pos))
+    }
+
     public fun getUserList(): MutableList<String> {
         val usersListOfStrings: MutableList<String> = mutableListOf("All Users")
         this.users.value!!.forEach { user: User ->
@@ -46,6 +60,13 @@ class MainViewModel : ViewModel() {
             .subscribe(this::handleTodoResponse, this::handleError))
     }
 
+    public fun loadTodosForUser(user: User) {
+        myCompositeDisposable?.add(getRequest().getTodosForUser(user.id)
+            .observeOn(AndroidSchedulers.mainThread()) // send the Observable’s notifications to Android’s main UI thread
+            .subscribeOn(Schedulers.io()) // perform api call on another thread
+            .subscribe(this::handleTodoResponse, this::handleError))
+    }
+
     private fun getRequest() = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
@@ -55,8 +76,6 @@ class MainViewModel : ViewModel() {
     private fun handleUsersResponse(users: List<User>) {
         this.users.postValue(ArrayList(users))
         Log.d("Users", users.toString())
-
-
     }
 
     private fun handleTodoResponse(todos: List<Todo>) {
